@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -107,6 +107,9 @@ class _CameraPageState extends State<CameraPage> {
     if (_isRecording) {
       final file = await _cameraController.stopVideoRecording();
       setState(() => _isRecording = false);
+      final bytes = File(file.path).readAsBytesSync();
+      final base64 = base64Encode(bytes);
+      final fileSize = File(file.path).lengthSync() / (1024 * 1024);
       final route = MaterialPageRoute(
         fullscreenDialog: true,
         builder: (_) => VideoPage(filePath: file.path),
@@ -155,9 +158,7 @@ class _VideoPageState extends State<VideoPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: () {
-              print('do something with the file');
-            },
+            onPressed: () {},
           )
         ],
       ),
